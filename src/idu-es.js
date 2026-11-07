@@ -124,6 +124,8 @@
     [/^Open composition (.+)$/, "Abrir composición $1"],
   ];
 
+  var savePill = null;
+
   var SKIP = { SCRIPT: 1, STYLE: 1, CODE: 1, PRE: 1, TEXTAREA: 1, IFRAME: 1 };
 
   function tr(text) {
@@ -181,8 +183,79 @@
     anchor.parentElement.insertBefore(btn, anchor.nextSibling);
   }
 
+  function mountSavePill() {
+    var existing = document.querySelector("[data-iduframe-save]");
+    if (existing) { savePill = existing; return; }
+    var btn = document.querySelector("[data-iduframe-btn]");
+    if (!btn || !btn.parentElement) return;
+    var el = document.createElement("span");
+    el.setAttribute("data-iduframe-save", "1");
+    el.setAttribute("data-iduframe-ui", "1");
+    el.style.cssText =
+      "margin-left:8px;font:600 10px/1 ui-sans-serif,system-ui;letter-spacing:.04em;" +
+      "opacity:0;transition:opacity .15s;white-space:nowrap";
+    btn.parentElement.insertBefore(el, btn);
+    savePill = el;
+  }
+
+  /* Indicador honesto: no adivina el estado interno del Studio. Observa las
+   * escrituras reales a /api/projects/ y muestra lo que pasó. Si el Studio
+   * algun dia agrega su propio boton de guardado, esto sigue siendo cierto
+   * (mide la red) y se puede retirar sin tocar nada mas. */
+  function installSaveHook() {
+    if (window.__iduframeSaveHook || typeof window.fetch !== "function") return;
+    window.__iduframeSaveHook = true;
+    var inflight = 0;
+    var hideTimer = null;
+
+    function paint(state) {
+      if (!savePill) return;
+      if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+      if (state === "saving") {
+        savePill.textContent = "Guardando…";
+        savePill.style.color = "inherit";
+        savePill.style.opacity = ".65";
+      } else if (state === "saved") {
+        savePill.textContent = "Guardado";
+        savePill.style.color = "#3fae6a";
+        savePill.style.opacity = "1";
+        hideTimer = setTimeout(function () { savePill.style.opacity = "0"; }, 2500);
+      } else if (state === "error") {
+        savePill.textContent = "Error al guardar";
+        savePill.style.color = "#d9534f";
+        savePill.style.opacity = "1";
+      } else {
+        savePill.style.opacity = "0";
+      }
+    }
+
+    var orig = window.fetch;
+    window.fetch = function (input, init) {
+      var url = typeof input === "string" ? input : (input && input.url) || "";
+      var method = ((init && init.method) || (input && input.method) || "GET").toUpperCase();
+      var isWrite = method !== "GET" && url.indexOf("/api/projects/") >= 0;
+      if (!isWrite) return orig.apply(window, arguments);
+      inflight++;
+      paint("saving");
+      return orig.apply(window, arguments).then(
+        function (r) {
+          inflight--;
+          paint(r.ok ? "saved" : "error");
+          return r;
+        },
+        function (e) {
+          inflight--;
+          paint("error");
+          throw e;
+        }
+      );
+    };
+  }
+
   function boot() {
     mountButton();
+    mountSavePill();
+    installSaveHook();
     if (lang !== "es") return;
     walk(document.body);
     var pending = null;
@@ -190,7 +263,7 @@
       if (pending) return;
       pending = requestAnimationFrame(function () {
         pending = null;
-        try { mountButton(); walk(document.body); } catch (e) {}
+        try { mountButton(); mountSavePill(); walk(document.body); } catch (e) {}
       });
     }).observe(document.body, { childList: true, subtree: true, characterData: true });
   }

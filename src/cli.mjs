@@ -121,9 +121,13 @@ function install(pkg) {
   const backup = shell + ".iduframe-backup";
   if (!existsSync(backup)) writeFileSync(backup, html, "utf8");
 
+  // La URL lleva el hash del script: sin esto el navegador sirve la version
+  // vieja de idu-es.js y una actualizacion del mod no se ve hasta que expire
+  // la cache. Con ?v=<hash>, cada build invalida la anterior sola.
+  const modHash = sha(readFileSync(join(HERE, SCRIPT_NAME))).slice(0, 8);
   const patched = html.replace(
     /<\/body>/i,
-    `  <script data-${MARK} src="${STATIC_PREFIX}${SCRIPT_NAME}"></script>\n</body>`
+    `  <script data-${MARK} src="${STATIC_PREFIX}${SCRIPT_NAME}?v=${modHash}"></script>\n</body>`
   );
   if (patched === html) throw new Error("no encontré </body> en el shell del studio");
   writeFileSync(shell, patched, "utf8");
@@ -199,8 +203,16 @@ try {
     const args = [hf, "preview", project, ...(port ? ["--port", port] : [])];
     const r = spawnSync(process.execPath, args, { stdio: "inherit" });
     process.exit(r.status === 0 ? 0 : 1);
+  } else if (cmd === "render") {
+    // Unico camino que produce MP4. El resto del CLI nunca renderiza.
+    const project = opt("project") || process.cwd();
+    const hf = join(resolvePkg(), "bin", "hyperframes.mjs");
+    const r = spawnSync(process.execPath, [hf, "render", project], { stdio: "inherit" });
+    process.exit(r.status === 0 ? 0 : 1);
   } else {
-    console.log("uso: iduframe <status|install|revert|measure|preview> [--package <ruta>] [--project <dir>] [--port <n>]");
+    console.log(
+      "uso: iduframe <status|install|revert|measure|preview|render> [--package <ruta>] [--project <dir>] [--port <n>] [--url <url>]"
+    );
     process.exit(2);
   }
 } catch (e) {
