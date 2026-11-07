@@ -1,0 +1,27 @@
+{
+  "name": "iduframe",
+  "version": "0.1.0",
+  "description": "HyperFrames + iduframe mod: Spanish Studio, integrity-checked install, no fork.",
+  "type": "module",
+  "bin": {
+    "iduframe": "src/cli.mjs"
+  },
+  "files": [
+    "src",
+    "compat",
+    "README.md",
+    "NOTICE"
+  ],
+  "dependencies": {
+    "hyperframes": "0.9.20"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Wladimirfn/iduframe.git"
+  },
+  "keywords": ["hyperframes", "iduframe", "video", "studio", "spanish", "mod"]
+}

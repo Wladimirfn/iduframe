@@ -1,0 +1,15 @@
+{
+  "version": "0.9.20",
+  "staticPrefix": "/assets/",
+  "shell": {
+    "path": "dist/studio/index.html",
+    "bytes": 900,
+    "sha256": "17103b9c6376ccf13bdf018b72d8c6ad0a956aafe6d02b6ff4982158a16726f0"
+  },
+  "notes": [
+    "El Studio sirve con SPA-fallback: cualquier ruta desconocida devuelve index.html.",
+    "Por eso el mod se sirve desde /assets/, el unico prefijo estatico real.",
+    "El parche agrega exactamente una linea antes de </body> y un archivo en dist/studio/assets/.",
+    "Si este hash cambia, revisar el shell antes de parchear: puede cambiar el </body> o el prefijo estatico."
+  ]
+}

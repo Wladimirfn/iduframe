@@ -1,0 +1,26 @@
+iduframe
+Copyright 2026 Wladimirfn
+
+Este producto incluye software de HyperFrames (https://github.com/heygen-com/hyperframes),
+Copyright HeyGen, licenciado bajo Apache License 2.0.
+Texto de la licencia: http://www.apache.org/licenses/LICENSE-2.0
+
+CAMBIOS REALIZADOS SOBRE HYPERFRAMES
+====================================
+iduframe no modifica el codigo fuente de HyperFrames ni sus bundles compilados.
+Sobre el paquete instalado de npm aplica exactamente dos cambios, ambos
+reversibles con `iduframe revert`:
+
+1. Copia el archivo `idu-es.js` en `dist/studio/assets/`.
+   Es una capa de traduccion al espanol que opera sobre el DOM en tiempo de
+   ejecucion y agrega un boton ES/EN junto al selector de tema.
+
+2. Inserta una unica linea en `dist/studio/index.html`, antes de `</body>`:
+   <script data-iduframe-es src="/assets/idu-es.js"></script>
+   Se guarda una copia del original en `index.html.iduframe-backup`.
+
+Ningun archivo compilado de HyperFrames es alterado. Si el hash del shell
+cambia en una version nueva, el instalador se niega a aplicar el parche.
+
+El nombre "HyperFrames" y las marcas asociadas pertenecen a sus titulares.
+Este proyecto no esta afiliado ni respaldado por HeyGen.
