@@ -1,0 +1,15 @@
+{
+  "version": "0.9.21",
+  "staticPrefix": "/assets/",
+  "shell": {
+    "path": "dist/studio/index.html",
+    "bytes": 900,
+    "sha256": "bb334537de629640b9cc05d1611cd64ba7e29ad243b1ac1334264902b44119e3"
+  },
+  "notes": [
+    "Revisado contra 0.9.20: el shell solo cambia el nombre del bundle (index-Bz2pYyGM.js -> index-Cq43Ovkf.js).",
+    "Mismo </body>, mismo prefijo /assets/, misma estructura. El parche aplica igual.",
+    "runtime (617->618 KB) y hyperframes-player (115 KB) cambiaron de hash: el puente GSAP se probo y sigue siendo necesario y suficiente.",
+    "0.9.21 agrega el aviso selectMediaObserverTargets para media fuera del host de composicion; se corrigio moviendo #voces dentro de #stage."
+  ]
+}

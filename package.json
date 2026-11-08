@@ -13,7 +13,7 @@
     "NOTICE"
   ],
   "dependencies": {
-    "hyperframes": "0.9.20"
+    "hyperframes": "0.9.21"
   },
   "engines": {
     "node": ">=22"
@@ -23,5 +23,12 @@
     "type": "git",
     "url": "https://github.com/Wladimirfn/iduframe.git"
   },
-  "keywords": ["hyperframes", "iduframe", "video", "studio", "spanish", "mod"]
+  "keywords": [
+    "hyperframes",
+    "iduframe",
+    "video",
+    "studio",
+    "spanish",
+    "mod"
+  ]
 }
