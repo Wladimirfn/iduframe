@@ -1,0 +1,14 @@
+{
+  "version": "0.9.25",
+  "staticPrefix": "/assets/",
+  "shell": {
+    "path": "dist/studio/index.html",
+    "bytes": 900,
+    "sha256": "07495615b8bf195572ec4b6d79ca6078d76d1a8a427a67f20b6d1bb01a987b64"
+  },
+  "notes": [
+    "Revisado contra 0.9.21: el shell solo cambia el nombre del bundle y del CSS. Misma estructura, mismo </body>, mismo /assets/.",
+    "Motivo del salto: 0.9.22 trae preview a calidad completa al scrubear; 0.9.23 arregla 'un set escrito antes de su tween ya no borra el final del tween' (nuestro puente es gsap.set + timeline); 0.9.25 siembra los valores aleatorios en cada render, asi que dos renders del mismo proyecto dan el mismo film.",
+    "El determinismo de 0.9.25 es requisito del gate de motion: compara frames entre renders, y sin semillas esa comparacion no significa nada."
+  ]
+}

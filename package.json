@@ -13,7 +13,7 @@
     "NOTICE"
   ],
   "dependencies": {
-    "hyperframes": "0.9.21"
+    "hyperframes": "0.9.25"
   },
   "engines": {
     "node": ">=22"
