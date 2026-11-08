@@ -209,9 +209,39 @@ try {
     const hf = join(resolvePkg(), "bin", "hyperframes.mjs");
     const r = spawnSync(process.execPath, [hf, "render", project], { stdio: "inherit" });
     process.exit(r.status === 0 ? 0 : 1);
+  } else if (cmd === "upstream") {
+    // El pin vive en package.json; aca comparamos contra el registry para que
+    // "actualizar" sea una decision revisada y no un npm update a ciegas.
+    const pkgJson = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8"));
+    const pinned = pkgJson.dependencies.hyperframes;
+    // En Windows `npm` es un .cmd: spawn sin shell falla y shell:true dispara
+    // DEP0190. Pasar por cmd.exe con argumentos fijos evita las dos cosas.
+    const isWin = process.platform === "win32";
+    const r = spawnSync(
+      isWin ? "cmd.exe" : "npm",
+      isWin ? ["/c", "npm", "view", "hyperframes", "version"] : ["view", "hyperframes", "version"],
+      { encoding: "utf8" }
+    );
+    const latest = (r.stdout || "").trim();
+    const manifest = manifestFor(pinned);
+    console.log(
+      JSON.stringify(
+        {
+          pinned,
+          latest: latest || null,
+          manifest: manifest ? "presente" : "falta",
+          verdict:
+            !latest ? "no pude consultar el registry"
+              : latest === pinned ? "al dia"
+              : "hay una version nueva: revisar el shell antes de subir el pin",
+        },
+        null,
+        2
+      )
+    );
   } else {
     console.log(
-      "uso: iduframe <status|install|revert|measure|preview|render> [--package <ruta>] [--project <dir>] [--port <n>] [--url <url>]"
+      "uso: iduframe <status|upstream|install|revert|measure|preview|render> [--package <ruta>] [--project <dir>] [--port <n>] [--url <url>]"
     );
     process.exit(2);
   }
