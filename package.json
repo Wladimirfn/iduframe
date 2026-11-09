@@ -1,5 +1,5 @@
 {
-  "name": "iduframe",
+  "name": "@wladimirfn/iduframe",
   "version": "0.1.0",
   "description": "HyperFrames + iduframe mod: Spanish Studio, integrity-checked install, no fork.",
   "type": "module",
@@ -30,5 +30,8 @@
     "studio",
     "spanish",
     "mod"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

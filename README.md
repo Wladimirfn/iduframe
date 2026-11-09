@@ -16,14 +16,22 @@ Acá lo único nuestro son:
 | `src/cli.mjs` | install / revert / status / measure / preview |
 | `compat/<version>.json` | Hash del shell: si upstream lo cambia, `install` falla cerrado |
 
+## Instalación
+
+```bash
+npm i -g @wladimirfn/iduframe
+```
+
+El `bin` se llama `iduframe`, así que el comando queda corto aunque el paquete tenga scope.
+
 ## Uso
 
 ```bash
-npx iduframe preview --project ./mi-video
-npx iduframe status
-npx iduframe install
-npx iduframe measure
-npx iduframe revert
+npx @wladimirfn/iduframe preview --project ./mi-video
+npx @wladimirfn/iduframe status
+npx @wladimirfn/iduframe install
+npx @wladimirfn/iduframe measure
+npx @wladimirfn/iduframe revert
 ```
 
 ## Actualizar HyperFrames
